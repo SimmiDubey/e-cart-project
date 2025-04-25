@@ -47,8 +47,6 @@ public class ProductController {
 
 
 
-
-
     //save product
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/add")

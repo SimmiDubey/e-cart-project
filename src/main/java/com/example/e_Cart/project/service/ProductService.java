@@ -26,4 +26,6 @@ public interface ProductService {
     //delete product
 
     void deleteProductDTOById(int productId);
+
+     ProductDTO calculateSale(ProductDTO productDTO);
 }

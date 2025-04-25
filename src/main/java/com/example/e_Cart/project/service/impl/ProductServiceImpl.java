@@ -24,6 +24,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
+        productDTO = calculateSale(productDTO);
+
        Product product=this.dtoToProduct(productDTO);
       Product savedProduct=productRepo.save(product);
 
@@ -55,6 +57,12 @@ public class ProductServiceImpl implements ProductService {
         product.setDiscount(productDTO.getDiscount());
         product.setCreatedOn(productDTO.getCreatedOn());
         product.setUpdatedOn(productDTO.getUpdatedOn());
+        product.setDescription(productDTO.getDescription());
+        product.setCategory(productDTO.getDescription());
+        product.setSalePrice(productDTO.getSalePrice());
+        product.setPurchasePrice(productDTO.getPurchasePrice());
+        product.setTotalPrice(productDTO.getTotalPrice());
+        product.setQuantity(productDTO.getQuantity());
 
         Product updateProduct=this.productRepo.save(product);
         ProductDTO productDTO1=this.productToDto(updateProduct);
@@ -68,9 +76,42 @@ public class ProductServiceImpl implements ProductService {
         this.productRepo.delete(product);
     }
 
+    @Override
+    public ProductDTO calculateSale(ProductDTO productDTO) {
+
+        //List<ProductDTO>productDTOS = productDTO.getProductDTOS();
+
+
+        double salePrice = productDTO.getSalePrice();
+        int quantity = productDTO.getQuantity();
+        double purchasePrice = productDTO.getPurchasePrice();
+        double discountPercent = productDTO.getDiscount();
+
+
+        double totalBeforeDiscount = salePrice * quantity;
+
+
+        double discountAmount = (discountPercent / 100.0) * totalBeforeDiscount;
+
+
+        double totalAfterDiscount = totalBeforeDiscount - discountAmount;
+
+
+      //  double profitOrLoss = (salePrice - purchasePrice) * quantity;
+
+        double profitOrLoss=(salePrice-(discountPercent*salePrice/100))-purchasePrice;
+
+
+        productDTO.setTotalPrice(totalAfterDiscount);
+        productDTO.setProfitOrLoss(profitOrLoss);
+
+        return productDTO;
+    }
+
+
     public Product dtoToProduct(ProductDTO productDTO){
-   Product product=this.modelMapper.map(productDTO,Product.class);
-   return product;
+       Product product=this.modelMapper.map(productDTO,Product.class);
+       return product;
     }
 
     public ProductDTO productToDto(Product product){

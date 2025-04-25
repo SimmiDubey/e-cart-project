@@ -1,9 +1,12 @@
+
 package com.example.e_Cart.project.entity;
 
+import com.example.e_Cart.project.dto.ProductDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 
@@ -19,15 +22,31 @@ public class Product {
     private double discount;
     private Date createdOn;
     private Date updatedOn;
+    private String description;
+    private String category;
+    private double salePrice;
+    private double purchasePrice;
+    private double totalPrice;
+    private int quantity;
+    private double profitOrLoss;
 
 
-    public Product(int id, String productName, int mrp, double discount, Date createdOn, Date updatedOn) {
+
+
+    public Product(int id, String productName, int mrp, double discount, Date createdOn, Date updatedOn, String description, String category, double salePrice, double purchasePrice, double totalPrice, int quantity, double profitOrLoss) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
         this.discount = discount;
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
+        this.description = description;
+        this.category = category;
+        this.salePrice = salePrice;
+        this.purchasePrice = purchasePrice;
+        this.totalPrice = totalPrice;
+        this.quantity = quantity;
+        this.profitOrLoss = profitOrLoss;
     }
 
     public Product() {
@@ -81,5 +100,59 @@ public class Product {
         this.updatedOn = updatedOn;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(double purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getProfitOrLoss() {
+        return profitOrLoss;
+    }
+
+    public void setProfitOrLoss(double profitOrLoss) {
+        this.profitOrLoss = profitOrLoss;
+    }
 }
