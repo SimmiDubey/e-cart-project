@@ -1,31 +1,64 @@
 package com.example.e_Cart.project.service;
 
 import com.example.e_Cart.project.dto.ProductDTO;
+import com.example.e_Cart.project.dto.ResultDTO;
 
 import java.util.List;
 
 public interface ProductService {
 
-    //create product
 
-     ProductDTO createProduct(ProductDTO productDTO);
+        // Add single product
+      //  ProductDTO createProduct(ProductDTO productDTO);
 
-     //get all product
+        // Add multiple products
+        ResultDTO createAllProducts(List<ProductDTO> productDTOs);
 
-    List<ProductDTO>getAllProducts();
+        // Get all products
+        List<ProductDTO> getAllProducts();
 
-    //getProducts
+        // Get product by ID
+        ProductDTO getProductById(int productId);
 
-    ProductDTO getProductById(int productId);
+        // Update product
+        ProductDTO updateProductDto(ProductDTO productDTO, int productId);
 
-    //update products
+        // Delete product by ID
+        void deleteProductDTOById(int productId);
 
-    ProductDTO updateProductDto(ProductDTO productDTO , int productId);
+        // Calculate sale price and profit/loss for a single product
+        ProductDTO calculateSale(ProductDTO productDTO);
+    }
 
 
-    //delete product
 
-    void deleteProductDTOById(int productId);
 
-     ProductDTO calculateSale(ProductDTO productDTO);
-}
+//    //create product
+//
+//    // ProductDTO createProduct(ProductDTO productDTO);
+//
+//     //get all product
+//
+//    List<ProductDTO>getAllProducts();
+//
+//    //getProducts
+//
+//    ProductDTO getProductById(int productId);
+//
+//    //update products
+//
+//    ProductDTO updateProductDto(ProductDTO productDTO , int productId);
+//
+//
+//    //delete product
+//
+//    void deleteProductDTOById(int productId);
+//
+//     ProductDTO calculateSale(ProductDTO productDTO);
+//
+//    List<ProductDTO> createAllProducts(List<ProductDTO> productDTOs);
+//
+//   // List<ProductDTO> createProductAll(List<ProductDTO> productDto);
+//}
+
+

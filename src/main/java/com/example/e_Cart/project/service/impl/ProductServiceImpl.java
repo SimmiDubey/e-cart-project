@@ -1,6 +1,7 @@
 package com.example.e_Cart.project.service.impl;
 
 import com.example.e_Cart.project.dto.ProductDTO;
+import com.example.e_Cart.project.dto.ResultDTO;
 import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.exception.ResourceNotFoundException;
 import com.example.e_Cart.project.repository.ProductRepo;
@@ -9,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,102 +24,119 @@ public class ProductServiceImpl implements ProductService {
     private ModelMapper modelMapper;
 
 
-    @Override
-    public ProductDTO createProduct(ProductDTO productDTO) {
-        productDTO = calculateSale(productDTO);
 
-       Product product=this.dtoToProduct(productDTO);
-      Product savedProduct=productRepo.save(product);
+        @Override
+        public ResultDTO createAllProducts(List<ProductDTO> productDTOs) {
+            double grandTotalPrice = 0.0;
+            double grandProfitOrLoss = 0.0;
 
-        return this.productToDto(savedProduct);
+            List<Product> products = new ArrayList<>();
+
+            for (ProductDTO productDTO : productDTOs) {
+                ProductDTO calculatedProduct = calculateSale(productDTO);
+                grandTotalPrice += calculatedProduct.getTotalPrice();
+                grandProfitOrLoss += calculatedProduct.getProfitOrLoss();
+                products.add(dtoToProduct(calculatedProduct));
+            }
+
+            List<Product> savedProducts = productRepo.saveAll(products);
+
+            List<ProductDTO> savedProductDTOs = savedProducts.stream()
+                    .map(this::productToDto)
+                    .collect(Collectors.toList());
+
+            ResultDTO resultDTO = new ResultDTO();
+            resultDTO.setProductDTOS(savedProductDTOs);
+            resultDTO.setGrandTotalPrice(grandTotalPrice);
+            resultDTO.setGrandProfitOrLoss(grandProfitOrLoss);
+
+            return resultDTO;
+        }
+
+        @Override
+        public List<ProductDTO> getAllProducts() {
+            List<Product> products = productRepo.findAll();
+            return products.stream()
+                    .map(this::productToDto)
+                    .collect(Collectors.toList());
+        }
+
+        @Override
+        public ProductDTO getProductById(int productId) {
+            Product product = productRepo.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+            return productToDto(product);
+        }
+
+        @Override
+        public ProductDTO updateProductDto(ProductDTO productDTO, int productId) {
+            Product product = productRepo.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+            product.setId(productDTO.getId());
+            product.setProductName(productDTO.getProductName());
+            product.setMrp(productDTO.getMrp());
+            product.setDiscount(productDTO.getDiscount());
+            product.setCreatedOn(productDTO.getCreatedOn());
+            product.setUpdatedOn(productDTO.getUpdatedOn());
+            product.setDescription(productDTO.getDescription());
+            product.setCategory(productDTO.getCategory());
+            product.setSalePrice(productDTO.getSalePrice());
+            product.setPurchasePrice(productDTO.getPurchasePrice());
+            product.setTotalPrice(productDTO.getTotalPrice());
+            product.setQuantity(productDTO.getQuantity());
+            product.setProfitOrLoss(productDTO.getProfitOrLoss());
+
+            Product updatedProduct = productRepo.save(product);
+            return productToDto(updatedProduct);
+        }
+
+        @Override
+        public void deleteProductDTOById(int productId) {
+            Product product = productRepo.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+            productRepo.delete(product);
+        }
+
+        @Override
+        public ProductDTO calculateSale(ProductDTO productDTO) {
+            double salePrice = productDTO.getSalePrice();
+            int quantity = productDTO.getQuantity();
+            double purchasePrice = productDTO.getPurchasePrice();
+            double discountPercent = productDTO.getDiscount();
+
+            double totalBeforeDiscount = salePrice * quantity;
+            double discountAmount = (discountPercent / 100.0) * totalBeforeDiscount;
+            double totalAfterDiscount = totalBeforeDiscount - discountAmount;
+
+            double discountedSalePricePerUnit = salePrice - (discountPercent * salePrice / 100);
+            double profitOrLossPerUnit = discountedSalePricePerUnit - purchasePrice;
+            double profitOrLoss = profitOrLossPerUnit * quantity;
+
+            productDTO.setTotalPrice(totalAfterDiscount);
+            productDTO.setProfitOrLoss(profitOrLoss);
+
+            if(productDTO.getStock() == null){
+                productDTO.setStock(productDTO.getQuantity());
+            }else {
+                int updatedStock = productDTO.getStock()-productDTO.getQuantity();
+                if(updatedStock < 0 ){
+                    throw new IllegalArgumentException("Not enough stock available for products :"+productDTO.getProductName());
+
+                }
+                productDTO.setStock(updatedStock);
+            }
+
+            return productDTO;
+        }
+
+        // Mapping Helpers
+        public Product dtoToProduct(ProductDTO productDTO) {
+            return modelMapper.map(productDTO, Product.class);
+        }
+
+        public ProductDTO productToDto(Product product) {
+            ProductDTO dto=modelMapper.map(product,ProductDTO.class);
+            dto.setId(product.getId());
+            return dto;
+        }
     }
-
-    @Override
-    public List<ProductDTO> getAllProducts() {
-        List<Product>products=this.productRepo.findAll();
-
-
-        List<ProductDTO>productDTOS = products.stream()
-                .map(this::productToDto)
-                .collect(Collectors.toList());
-        return productDTOS;
-    }
-
-    @Override
-    public ProductDTO getProductById(int productId) {
-        Product product=this.productRepo.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product","productId",+productId));
-        return this.productToDto(product);
-    }
-
-    @Override
-    public ProductDTO updateProductDto(ProductDTO productDTO, int productId) {
-        Product product=this.productRepo.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product","productId",+productId));
-        product.setProductName(productDTO.getProductName());
-        product.setMrp(productDTO.getMrp());
-        product.setDiscount(productDTO.getDiscount());
-        product.setCreatedOn(productDTO.getCreatedOn());
-        product.setUpdatedOn(productDTO.getUpdatedOn());
-        product.setDescription(productDTO.getDescription());
-        product.setCategory(productDTO.getDescription());
-        product.setSalePrice(productDTO.getSalePrice());
-        product.setPurchasePrice(productDTO.getPurchasePrice());
-        product.setTotalPrice(productDTO.getTotalPrice());
-        product.setQuantity(productDTO.getQuantity());
-
-        Product updateProduct=this.productRepo.save(product);
-        ProductDTO productDTO1=this.productToDto(updateProduct);
-
-        return productDTO1;
-    }
-
-    @Override
-    public void deleteProductDTOById(int productId) {
-     Product product=this.productRepo.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product","productId",productId));
-        this.productRepo.delete(product);
-    }
-
-    @Override
-    public ProductDTO calculateSale(ProductDTO productDTO) {
-
-        //List<ProductDTO>productDTOS = productDTO.getProductDTOS();
-
-
-        double salePrice = productDTO.getSalePrice();
-        int quantity = productDTO.getQuantity();
-        double purchasePrice = productDTO.getPurchasePrice();
-        double discountPercent = productDTO.getDiscount();
-
-
-        double totalBeforeDiscount = salePrice * quantity;
-
-
-        double discountAmount = (discountPercent / 100.0) * totalBeforeDiscount;
-
-
-        double totalAfterDiscount = totalBeforeDiscount - discountAmount;
-
-
-      //  double profitOrLoss = (salePrice - purchasePrice) * quantity;
-
-        double profitOrLoss=(salePrice-(discountPercent*salePrice/100))-purchasePrice;
-
-
-        productDTO.setTotalPrice(totalAfterDiscount);
-        productDTO.setProfitOrLoss(profitOrLoss);
-
-        return productDTO;
-    }
-
-
-    public Product dtoToProduct(ProductDTO productDTO){
-       Product product=this.modelMapper.map(productDTO,Product.class);
-       return product;
-    }
-
-    public ProductDTO productToDto(Product product){
-        ProductDTO productDTO=this.modelMapper.map(product,ProductDTO.class);
-        return productDTO;
-    }
-
-
-}

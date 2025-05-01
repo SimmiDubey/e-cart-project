@@ -29,11 +29,11 @@ public class Product {
     private double totalPrice;
     private int quantity;
     private double profitOrLoss;
+    private Integer stock;
 
 
 
-
-    public Product(int id, String productName, int mrp, double discount, Date createdOn, Date updatedOn, String description, String category, double salePrice, double purchasePrice, double totalPrice, int quantity, double profitOrLoss) {
+    public Product(int id, String productName, int mrp, double discount, Date createdOn, Date updatedOn, String description, String category, double salePrice, double purchasePrice, double totalPrice, int quantity, double profitOrLoss,Integer stock) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -47,6 +47,7 @@ public class Product {
         this.totalPrice = totalPrice;
         this.quantity = quantity;
         this.profitOrLoss = profitOrLoss;
+        this.stock=stock;
     }
 
     public Product() {
@@ -154,5 +155,13 @@ public class Product {
 
     public void setProfitOrLoss(double profitOrLoss) {
         this.profitOrLoss = profitOrLoss;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 }

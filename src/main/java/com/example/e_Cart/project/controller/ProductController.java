@@ -2,10 +2,12 @@ package com.example.e_Cart.project.controller;
 
 import com.example.e_Cart.project.dto.ApiResponse;
 import com.example.e_Cart.project.dto.ProductDTO;
+import com.example.e_Cart.project.dto.ResultDTO;
 import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.service.JwtService;
 import com.example.e_Cart.project.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +53,15 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/add")
 
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDto){
-        ProductDTO createproductDto=this.productService.createProduct(productDto);
-        return new ResponseEntity<>(createproductDto, HttpStatus.OK);
+
+    public ResponseEntity<ResultDTO> addProduct(@Valid @RequestBody List<@Valid ProductDTO> productDtos) {
+        ResultDTO createproductDto = this.productService.createAllProducts(productDtos);
+        return new ResponseEntity<>(createproductDto, HttpStatus.CREATED);
     }
+
+
+
+
 
     //get the product
 
