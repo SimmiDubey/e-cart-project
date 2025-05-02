@@ -1,9 +1,7 @@
 package com.example.e_Cart.project.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.e_Cart.project.enums.Role;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -16,14 +14,19 @@ public class User {
     private String username;
     private String password;
 
-    private List<String> roles;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 
-    public User(int id, String username, String password, List<String> roles) {
+
+   // private List<String> roles;
+
+
+    public User(int id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.roles = roles;
+        this.role = role;
     }
 
     public User(){
@@ -55,11 +58,11 @@ public class User {
     }
 
 
-    public List<String> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

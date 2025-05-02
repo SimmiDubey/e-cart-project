@@ -15,17 +15,18 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepo userRepository;
 
-
+    // Removed 'static' modifier
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Find the user by username
+        User user = userRepository.findByUsername(username);
 
-        User user= userRepository.findByUsername(username);
-
-        if (user==null) {
-            System.out.println("User 404");
-            throw new UsernameNotFoundException("User 404");
+        // If user not found, throw exception
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
         }
+
+        // Return a custom UserPrincipal with user details
         return new UserPrincipal(user);
     }
-
 }

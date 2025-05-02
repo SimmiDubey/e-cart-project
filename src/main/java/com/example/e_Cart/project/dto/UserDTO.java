@@ -1,16 +1,20 @@
 package com.example.e_Cart.project.dto;
 
+import com.example.e_Cart.project.enums.Role;
+
 import java.util.List;
 
 public class UserDTO {
     private String username;
     private String password;
-    private List<String>roles;
+   // private List<String>roles;
 
-    public UserDTO(String username, String password, List<String> roles) {
+    private Role role;
+
+    public UserDTO(String username, String password, Role role) {
         this.username = username;
         this.password = password;
-        this.roles = roles;
+        this.role = role;
     }
 
     public UserDTO() {
@@ -32,11 +36,11 @@ public class UserDTO {
         this.password = password;
     }
 
-    public List<String> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

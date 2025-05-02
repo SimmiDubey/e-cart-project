@@ -1,5 +1,6 @@
 package com.example.e_Cart.project.service.impl;
 
+import com.example.e_Cart.project.enums.Role;
 import com.example.e_Cart.project.dto.ProductDTO;
 import com.example.e_Cart.project.dto.UserDTO;
 import com.example.e_Cart.project.entity.Product;
@@ -27,6 +28,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO addUser(UserDTO userDTO) {
         User user=this.dtoToUser(userDTO);
+
+        if (user.getRole() == null) {
+            user.setRole(Role.USER); // Default role
+        }
+
         User savedProduct=userRepo.save(user);
 
         return this.userToDto(savedProduct);

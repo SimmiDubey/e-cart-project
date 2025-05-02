@@ -6,6 +6,7 @@ import com.example.e_Cart.project.dto.ResultDTO;
 import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.service.JwtService;
+import com.example.e_Cart.project.service.MyUserDetailsService;
 import com.example.e_Cart.project.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,19 +33,24 @@ public class ProductController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private MyUserDetailsService myUserDetailsService;
+
+    @Autowired
     private JwtService jwtService;
 
     @PostMapping("/login")
-    public String login(@RequestBody User user){
+    public String login(@RequestBody User user) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+        );
 
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
-        if(authentication.isAuthenticated())
-            return jwtService.generateToken(user.getUsername());
-        else
+        if (authentication.isAuthenticated()) {
+            UserDetails userDetails;
+            userDetails = myUserDetailsService.loadUserByUsername(user.getUsername());
+            return jwtService.generateToken(userDetails);
+        } else {
             return "Login Failed";
-
+        }
     }
 
 
@@ -65,8 +72,8 @@ public class ProductController {
 
     //get the product
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("/user/products")
+    @PreAuthorize("hasAnyRole('WAREHOUSE','USER')")
+    @GetMapping("/products/warehouse")
     public ResponseEntity<List<ProductDTO>> getProducts(){
     return ResponseEntity.ok(this.productService.getAllProducts());
 
@@ -77,7 +84,7 @@ public class ProductController {
    return ResponseEntity.ok(this.productService.getProductById(productId));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','WAREHOUSE')")
     @PutMapping("/admin/{productId}")
 
       public ResponseEntity<ProductDTO>updateProduct(@RequestBody ProductDTO productDTO,@PathVariable int productId){
