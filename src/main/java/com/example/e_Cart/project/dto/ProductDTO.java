@@ -1,5 +1,10 @@
 package com.example.e_Cart.project.dto;
 
+import com.example.e_Cart.project.entity.User;
+import com.example.e_Cart.project.enums.ProductStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.*;
 import java.util.Date;
 
@@ -45,11 +50,19 @@ public class ProductDTO {
    @Min(value = 0, message = "Stock cannot be negative")
     private Integer stock;
 
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status=ProductStatus.PENDING;
+
+    @ManyToOne
+    private User createdBy;
+
+
+
     public ProductDTO() {}
 
     public ProductDTO(int id, String productName, int mrp, Double discount, Date createdOn, Date updatedOn,
                       String category, String description, Double salePrice, Double purchasePrice, double totalPrice,
-                      Integer quantity, double profitOrLoss, Integer stock) {
+                      Integer quantity, double profitOrLoss, Integer stock,ProductStatus status) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -64,6 +77,7 @@ public class ProductDTO {
         this.quantity = quantity;
         this.profitOrLoss = profitOrLoss;
         this.stock = stock;
+        this.status=status;
     }
 
 
@@ -109,6 +123,22 @@ public class ProductDTO {
 
     public Integer getStock() { return stock; }
     public void setStock(Integer stock) { this.stock = stock; }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 
     // --- toString ---
     @Override

@@ -5,6 +5,7 @@ import com.example.e_Cart.project.dto.ProductDTO;
 import com.example.e_Cart.project.dto.ResultDTO;
 import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.entity.User;
+import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.service.JwtService;
 import com.example.e_Cart.project.service.MyUserDetailsService;
 import com.example.e_Cart.project.service.ProductService;
@@ -57,7 +58,7 @@ public class ProductController {
 
 
     //save product
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('WAREHOUSE')")
     @PostMapping("/admin/add")
 
 
@@ -65,7 +66,6 @@ public class ProductController {
         ResultDTO createproductDto = this.productService.createAllProducts(productDtos);
         return new ResponseEntity<>(createproductDto, HttpStatus.CREATED);
     }
-
 
 
 
@@ -99,6 +99,21 @@ public class ProductController {
      return new ResponseEntity<>(new ApiResponse("Product deleted Successfully",true),HttpStatus.OK);
 
     }
+
+    // Get products by status
+    @PreAuthorize("hasAnyRole('ADMIN','WAREHOUSE','USER')")
+    @GetMapping("/products/by-status")
+    public ResponseEntity<List<ProductDTO>> getProductsByStatus(@RequestParam("status") ProductStatus status) {
+        List<ProductDTO> products = productService.getProductsByStatus(status);
+        return ResponseEntity.ok(products);
+    }
+
+      @GetMapping("/pending")
+     public ResponseEntity<List<ProductDTO>> getPendingProduct(){
+        return ResponseEntity.ok(productService.getPendingProducts());
+      }
+
+
 
 
 }

@@ -3,6 +3,8 @@ package com.example.e_Cart.project.service.impl;
 import com.example.e_Cart.project.dto.ProductDTO;
 import com.example.e_Cart.project.dto.ResultDTO;
 import com.example.e_Cart.project.entity.Product;
+import com.example.e_Cart.project.entity.User;
+import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.exception.ResourceNotFoundException;
 import com.example.e_Cart.project.repository.ProductRepo;
 import com.example.e_Cart.project.service.ProductService;
@@ -129,7 +131,52 @@ public class ProductServiceImpl implements ProductService {
             return productDTO;
         }
 
-        // Mapping Helpers
+    @Override
+    public List<Product> getApprovedProducts() {
+        return productRepo.findByStatus(ProductStatus.APPROVED);
+    }
+
+    @Override
+    public List<ProductDTO> getPendingProducts() {
+        return productRepo.findByStatus(ProductStatus.PENDING)
+                .stream()
+                .map(this::productToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductDTO updateProductStatus(int productId, ProductStatus status) {
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+        product.setStatus(status); // Update the status
+        Product updatedProduct = productRepo.save(product); // Save the updated product
+        return productToDto(updatedProduct); // Return the updated product DTO
+    }
+
+    @Override
+    public List<ProductDTO> getProductByUser(User user) {
+        return productRepo.findByCreatedBy(user).stream()
+                .map(this::productToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> getProductsByStatus(ProductStatus status) {
+        return productRepo.findByStatus(status)
+                .stream()
+                .map(this::productToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Product> getProductStatus(String productStatus) {
+        ProductStatus statusEnum=ProductStatus.valueOf(productStatus.toUpperCase());
+        return productRepo.findByProductStatus(statusEnum);
+    }
+
+
+
+    // Mapping Helpers
         public Product dtoToProduct(ProductDTO productDTO) {
             return modelMapper.map(productDTO, Product.class);
         }

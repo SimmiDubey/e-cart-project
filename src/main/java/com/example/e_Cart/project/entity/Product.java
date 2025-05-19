@@ -2,6 +2,7 @@
 package com.example.e_Cart.project.entity;
 
 import com.example.e_Cart.project.dto.ProductDTO;
+import com.example.e_Cart.project.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,8 +33,21 @@ public class Product {
     private Integer stock;
 
 
+    @Enumerated(EnumType.STRING)
+   private ProductStatus status=ProductStatus.PENDING;
 
-    public Product(int id, String productName, int mrp, double discount, Date createdOn, Date updatedOn, String description, String category, double salePrice, double purchasePrice, double totalPrice, int quantity, double profitOrLoss,Integer stock) {
+     @Enumerated(EnumType.STRING)
+     private ProductStatus productStatus;  //pending Approved rejected
+
+    @ManyToOne
+    private User createdBy;
+
+
+
+     public Product(int id, String productName, int mrp, double discount,
+                    Date createdOn, Date updatedOn, String description, String category,
+                    double salePrice, double purchasePrice, double totalPrice, int quantity,
+                    double profitOrLoss,Integer stock,ProductStatus status) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -48,6 +62,8 @@ public class Product {
         this.quantity = quantity;
         this.profitOrLoss = profitOrLoss;
         this.stock=stock;
+
+        this.status=status;
     }
 
     public Product() {
@@ -163,5 +179,30 @@ public class Product {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public ProductStatus getProductStatus() {
+        return productStatus;
+    }
+
+    public void setProductStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 }
