@@ -2,25 +2,27 @@ package com.example.e_Cart.project.dto;
 
 import java.util.List;
 
-public class ResultDTO {
-    private List<ProductDTO>productDTOS;
+public class ResultDTORes
+{
+    private List<ProductDTORes>productDTOS;
     private double grandTotalPrice;
     private double grandProfitOrLoss;
+    private List<ProductDTO> productDTOSRes;
 
-    public ResultDTO(List<ProductDTO> productDTOS, double grandTotalPrice, double grandProfitOrLoss) {
+    public ResultDTORes(List<ProductDTORes> productDTOS, double grandTotalPrice, double grandProfitOrLoss) {
         this.productDTOS = productDTOS;
         this.grandTotalPrice = grandTotalPrice;
         this.grandProfitOrLoss = grandProfitOrLoss;
     }
 
-    public ResultDTO() {
+    public ResultDTORes() {
     }
 
-    public List<ProductDTO> getProductDTOS() {
+    public List<ProductDTORes> getProductDTOS() {
         return productDTOS;
     }
 
-    public void setProductDTOS(List<ProductDTO> productDTOS) {
+    public void setProductDTOSRes(List<ProductDTORes> productDTOS) {
         this.productDTOS = productDTOS;
     }
 
@@ -38,5 +40,12 @@ public class ResultDTO {
 
     public void setGrandProfitOrLoss(double grandProfitOrLoss) {
         this.grandProfitOrLoss = grandProfitOrLoss;
+    }
+
+
+   
+
+    public List<ProductDTO> getProductDTOSRes() {
+        return productDTOSRes;
     }
 }

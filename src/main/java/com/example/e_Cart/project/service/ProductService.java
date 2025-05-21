@@ -1,8 +1,8 @@
 package com.example.e_Cart.project.service;
 
 import com.example.e_Cart.project.dto.ProductDTO;
-import com.example.e_Cart.project.dto.ResultDTO;
-import com.example.e_Cart.project.entity.Product;
+
+import com.example.e_Cart.project.dto.ResultDTORes;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProductService {
 
         // Add multiple products
-        ResultDTO createAllProducts(List<ProductDTO> productDTOs);
+        ResultDTORes createAllProducts(List<ProductDTO> productDTOs, User user);
 
         // Get all products
         List<ProductDTO> getAllProducts();
@@ -29,10 +29,10 @@ public interface ProductService {
         ProductDTO calculateSale(ProductDTO productDTO);
 
         // Get all approved products for users
-        List<Product> getApprovedProducts();
+       // List<Product> getApprovedProducts();
 
         // Get all pending products for admin review
-        List<ProductDTO> getPendingProducts();
+      //  List<ProductDTO> getPendingProducts();
 
         // Approve or reject a product by admin
         ProductDTO updateProductStatus(int productId, ProductStatus status);
@@ -44,7 +44,7 @@ public interface ProductService {
         List<ProductDTO> getProductsByStatus(ProductStatus status);
 
         // Get product status by status string
-        List<Product> getProductStatus(String productStatus);
+     //   List<Product> getProductStatus(String productStatus);
 
         // Optionally, implement search functionality here in the future
         // List<ProductDTO> getSearchProduct();

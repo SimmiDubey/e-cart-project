@@ -1,7 +1,9 @@
 package com.example.e_Cart.project.service.impl;
 
 import com.example.e_Cart.project.dto.ProductDTO;
-import com.example.e_Cart.project.dto.ResultDTO;
+import com.example.e_Cart.project.dto.ProductDTORes;
+
+import com.example.e_Cart.project.dto.ResultDTORes;
 import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
@@ -27,35 +29,38 @@ public class ProductServiceImpl implements ProductService {
 
 
 
-        @Override
-        public ResultDTO createAllProducts(List<ProductDTO> productDTOs) {
-            double grandTotalPrice = 0.0;
-            double grandProfitOrLoss = 0.0;
+    @Override
+    public ResultDTORes createAllProducts(List<ProductDTO> productDTOs, User user) {
+        double grandTotalPrice = 0.0;
+        double grandProfitOrLoss = 0.0;
 
-            List<Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
 
-            for (ProductDTO productDTO : productDTOs) {
-                ProductDTO calculatedProduct = calculateSale(productDTO);
-                grandTotalPrice += calculatedProduct.getTotalPrice();
-                grandProfitOrLoss += calculatedProduct.getProfitOrLoss();
-                products.add(dtoToProduct(calculatedProduct));
-            }
+        for (ProductDTO productDTO : productDTOs) {
+            ProductDTO calculatedProduct = calculateSale(productDTO);
+            grandTotalPrice += calculatedProduct.getTotalPrice();
+            grandProfitOrLoss += calculatedProduct.getProfitOrLoss();
 
-            List<Product> savedProducts = productRepo.saveAll(products);
-
-            List<ProductDTO> savedProductDTOs = savedProducts.stream()
-                    .map(this::productToDto)
-                    .collect(Collectors.toList());
-
-            ResultDTO resultDTO = new ResultDTO();
-            resultDTO.setProductDTOS(savedProductDTOs);
-            resultDTO.setGrandTotalPrice(grandTotalPrice);
-            resultDTO.setGrandProfitOrLoss(grandProfitOrLoss);
-
-            return resultDTO;
+            Product product = dtoToProduct(calculatedProduct);
+            product.setCreatedBy(user);  // Set the createdBy field
+            products.add(product);
         }
 
-        @Override
+        List<Product> savedProducts = productRepo.saveAll(products);    
+
+        List<ProductDTORes> savedProductDTOs = savedProducts.stream()
+                .map(this::productToDtoRes)
+                .collect(Collectors.toList());
+
+        ResultDTORes resultDTO = new ResultDTORes();
+        resultDTO.setProductDTOSRes(savedProductDTOs);
+        resultDTO.setGrandTotalPrice(grandTotalPrice);
+        resultDTO.setGrandProfitOrLoss(grandProfitOrLoss);
+
+        return resultDTO;
+    }
+
+    @Override
         public List<ProductDTO> getAllProducts() {
             List<Product> products = productRepo.findAll();
             return products.stream()
@@ -131,18 +136,8 @@ public class ProductServiceImpl implements ProductService {
             return productDTO;
         }
 
-    @Override
-    public List<Product> getApprovedProducts() {
-        return productRepo.findByStatus(ProductStatus.APPROVED);
-    }
 
-    @Override
-    public List<ProductDTO> getPendingProducts() {
-        return productRepo.findByStatus(ProductStatus.PENDING)
-                .stream()
-                .map(this::productToDto)
-                .collect(Collectors.toList());
-    }
+
 
     @Override
     public ProductDTO updateProductStatus(int productId, ProductStatus status) {
@@ -168,11 +163,7 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Product> getProductStatus(String productStatus) {
-        ProductStatus statusEnum=ProductStatus.valueOf(productStatus.toUpperCase());
-        return productRepo.findByProductStatus(statusEnum);
-    }
+//
 
 
 
@@ -186,4 +177,11 @@ public class ProductServiceImpl implements ProductService {
             dto.setId(product.getId());
             return dto;
         }
+
+    public ProductDTORes productToDtoRes(Product product) {
+        ProductDTORes dto=modelMapper.map(product,ProductDTORes.class);
+        dto.setId(product.getId());
+        dto.setCreatedBy(product.getCreatedBy().getRole().name());
+        return dto;
+    }
     }

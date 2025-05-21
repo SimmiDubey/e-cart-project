@@ -2,10 +2,13 @@ package com.example.e_Cart.project.controller;
 
 import com.example.e_Cart.project.dto.ApiResponse;
 import com.example.e_Cart.project.dto.ProductDTO;
-import com.example.e_Cart.project.dto.ResultDTO;
+//import com.example.e_Cart.project.dto.ResultDTO;
+import com.example.e_Cart.project.dto.ResultDTORes;
 import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
+import com.example.e_Cart.project.exception.ResourceNotFoundException;
+import com.example.e_Cart.project.repository.UserRepo;
 import com.example.e_Cart.project.service.JwtService;
 import com.example.e_Cart.project.service.MyUserDetailsService;
 import com.example.e_Cart.project.service.ProductService;
@@ -20,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +43,9 @@ public class ProductController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @PostMapping("/login")
     public String login(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate(
@@ -57,15 +64,30 @@ public class ProductController {
 
 
 
-    //save product
     @PreAuthorize("hasRole('WAREHOUSE')")
     @PostMapping("/admin/add")
+    public ResponseEntity<ResultDTORes> addProduct(
+            @Valid @RequestBody List<@Valid ProductDTO> productDtos,
+            @RequestHeader("Authorization") String authHeader) {
 
+        // Extract JWT token from Authorization header
+        String token = authHeader.substring(7);
 
-    public ResponseEntity<ResultDTO> addProduct(@Valid @RequestBody List<@Valid ProductDTO> productDtos) {
-        ResultDTO createproductDto = this.productService.createAllProducts(productDtos);
-        return new ResponseEntity<>(createproductDto, HttpStatus.CREATED);
+        //  Use correct method from JwtService
+        String username = jwtService.extractUserName(token);
+
+        //  Find user by username
+        User user = userRepo.findByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFoundException("User", "username", username);
+        }
+
+        //  Pass user to ProductService
+        ResultDTORes result = productService.createAllProducts(productDtos, user);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+
 
 
 
@@ -100,20 +122,13 @@ public class ProductController {
 
     }
 
-    // Get products by status
-    @PreAuthorize("hasAnyRole('ADMIN','WAREHOUSE','USER')")
-    @GetMapping("/products/by-status")
-    public ResponseEntity<List<ProductDTO>> getProductsByStatus(@RequestParam("status") ProductStatus status) {
-        List<ProductDTO> products = productService.getProductsByStatus(status);
+
+    @PreAuthorize("hasAnyRole('ADMIN','WAREHOUSE')")
+    @GetMapping("/status")
+    public ResponseEntity<List<ProductDTO>> getProductsByStatus(@RequestParam("value") String value) {
+        ProductStatus productStatus = ProductStatus.valueOf(value.toUpperCase());
+        List<ProductDTO> products = productService.getProductsByStatus(productStatus);
         return ResponseEntity.ok(products);
     }
-
-      @GetMapping("/pending")
-     public ResponseEntity<List<ProductDTO>> getPendingProduct(){
-        return ResponseEntity.ok(productService.getPendingProducts());
-      }
-
-
-
 
 }

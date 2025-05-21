@@ -1,23 +1,17 @@
-
 package com.example.e_Cart.project.entity;
 
-import com.example.e_Cart.project.dto.ProductDTO;
 import com.example.e_Cart.project.enums.ProductStatus;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
-
-
 public class Product {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     private String productName;
     private int mrp;
     private double discount;
@@ -32,22 +26,21 @@ public class Product {
     private double profitOrLoss;
     private Integer stock;
 
-
     @Enumerated(EnumType.STRING)
-   private ProductStatus status=ProductStatus.PENDING;
-
-     @Enumerated(EnumType.STRING)
-     private ProductStatus productStatus;  //pending Approved rejected
+    private ProductStatus status = ProductStatus.PENDING;
 
     @ManyToOne
     private User createdBy;
 
+    // Default constructor
+    public Product() {
+    }
 
-
-     public Product(int id, String productName, int mrp, double discount,
-                    Date createdOn, Date updatedOn, String description, String category,
-                    double salePrice, double purchasePrice, double totalPrice, int quantity,
-                    double profitOrLoss,Integer stock,ProductStatus status) {
+    // Parameterized constructor
+    public Product(int id, String productName, int mrp, double discount,
+                   Date createdOn, Date updatedOn, String description, String category,
+                   double salePrice, double purchasePrice, double totalPrice, int quantity,
+                   double profitOrLoss, Integer stock, ProductStatus status, User createdBy) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -61,13 +54,12 @@ public class Product {
         this.totalPrice = totalPrice;
         this.quantity = quantity;
         this.profitOrLoss = profitOrLoss;
-        this.stock=stock;
-
-        this.status=status;
+        this.stock = stock;
+        this.status = status;
+        this.createdBy = createdBy;
     }
 
-    public Product() {
-    }
+    // Getters and Setters
 
     public int getId() {
         return id;
@@ -181,6 +173,13 @@ public class Product {
         this.stock = stock;
     }
 
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+    }
 
     public User getCreatedBy() {
         return createdBy;
@@ -188,21 +187,5 @@ public class Product {
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
-    }
-
-    public ProductStatus getProductStatus() {
-        return productStatus;
-    }
-
-    public void setProductStatus(ProductStatus productStatus) {
-        this.productStatus = productStatus;
-    }
-
-    public ProductStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProductStatus status) {
-        this.status = status;
     }
 }

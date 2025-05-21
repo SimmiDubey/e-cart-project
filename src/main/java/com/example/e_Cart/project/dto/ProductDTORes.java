@@ -5,10 +5,14 @@ import com.example.e_Cart.project.enums.ProductStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Date;
 
-public class ProductDTO {
+public class ProductDTORes {
 
     private int id;
 
@@ -54,15 +58,15 @@ public class ProductDTO {
     private ProductStatus status=ProductStatus.PENDING;
 
     @ManyToOne
-    private User createdBy;
+    private String createdBy;
 
 
 
-    public ProductDTO() {}
+    public ProductDTORes() {}
 
-    public ProductDTO(int id, String productName, int mrp, Double discount, Date createdOn, Date updatedOn,
-                      String category, String description, Double salePrice, Double purchasePrice, double totalPrice,
-                      Integer quantity, double profitOrLoss, Integer stock,ProductStatus status,User createdBy) {
+    public ProductDTORes(int id, String productName, int mrp, Double discount, Date createdOn, Date updatedOn,
+                         String category, String description, Double salePrice, Double purchasePrice, double totalPrice,
+                         Integer quantity, double profitOrLoss, Integer stock, ProductStatus status, String createdBy) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -133,11 +137,11 @@ public class ProductDTO {
         this.status = status;
     }
 
-    public User getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(String  createdBy) {
         this.createdBy = createdBy;
     }
 
