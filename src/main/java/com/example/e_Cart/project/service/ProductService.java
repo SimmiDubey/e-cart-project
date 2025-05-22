@@ -48,4 +48,10 @@ public interface ProductService {
 
         // Optionally, implement search functionality here in the future
         // List<ProductDTO> getSearchProduct();
+
+          List<ProductDTO>findByEmail(String email);
+
+        List<ProductDTO> findByEmailAndStatus(String email, ProductStatus status);
+
+
 }

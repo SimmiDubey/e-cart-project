@@ -9,10 +9,13 @@ import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.exception.ResourceNotFoundException;
 import com.example.e_Cart.project.repository.ProductRepo;
+import com.example.e_Cart.project.repository.UserRepo;
 import com.example.e_Cart.project.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private UserRepo userRepo;
+
 
 
 
@@ -46,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
             products.add(product);
         }
 
-        List<Product> savedProducts = productRepo.saveAll(products);    
+        List<Product> savedProducts = productRepo.saveAll(products);
 
         List<ProductDTORes> savedProductDTOs = savedProducts.stream()
                 .map(this::productToDtoRes)
@@ -92,6 +99,7 @@ public class ProductServiceImpl implements ProductService {
             product.setTotalPrice(productDTO.getTotalPrice());
             product.setQuantity(productDTO.getQuantity());
             product.setProfitOrLoss(productDTO.getProfitOrLoss());
+            product.setStatus(productDTO.getStatus());
 
             Product updatedProduct = productRepo.save(product);
             return productToDto(updatedProduct);
@@ -163,6 +171,32 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductDTO> findByEmail(String email) {
+        List<Product>products = productRepo.findByEmail(email);
+
+        return products.stream()
+                .map(this::productToDto)
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
+
+    @Override
+    public List<ProductDTO> findByEmailAndStatus(String email, ProductStatus status) {
+        List<Product> products = productRepo.findByEmailAndStatus(email,ProductStatus.PENDING);
+
+        return products.stream()
+                .map(this::productToDto)
+                .collect(Collectors.toList());
+    }
+
+
+
+
 //
 
 
@@ -185,3 +219,4 @@ public class ProductServiceImpl implements ProductService {
         return dto;
     }
     }
+

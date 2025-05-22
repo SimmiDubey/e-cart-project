@@ -5,6 +5,7 @@ import com.example.e_Cart.project.dto.ProductDTO;
 import com.example.e_Cart.project.dto.UserDTO;
 import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.entity.User;
+import com.example.e_Cart.project.repository.ProductRepo;
 import com.example.e_Cart.project.repository.UserRepo;
 import com.example.e_Cart.project.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepo userRepo;
+
+
+    @Autowired
+    private ProductRepo productRepo;
 
     @Autowired
     private ModelMapper modelMapper;

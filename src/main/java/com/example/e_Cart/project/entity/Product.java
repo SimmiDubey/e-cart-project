@@ -31,6 +31,12 @@ public class Product {
 
     @ManyToOne
     private User createdBy;
+    private String email;
+
+
+
+
+
 
     // Default constructor
     public Product() {
@@ -40,7 +46,7 @@ public class Product {
     public Product(int id, String productName, int mrp, double discount,
                    Date createdOn, Date updatedOn, String description, String category,
                    double salePrice, double purchasePrice, double totalPrice, int quantity,
-                   double profitOrLoss, Integer stock, ProductStatus status, User createdBy) {
+                   double profitOrLoss, Integer stock, ProductStatus status, User createdBy,String email) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -57,6 +63,8 @@ public class Product {
         this.stock = stock;
         this.status = status;
         this.createdBy = createdBy;
+        this.email=email;
+
     }
 
     // Getters and Setters
@@ -187,5 +195,13 @@ public class Product {
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

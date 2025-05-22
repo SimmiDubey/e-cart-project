@@ -56,13 +56,18 @@ public class ProductDTO {
     @ManyToOne
     private User createdBy;
 
+    private String email;
+
+
+
 
 
     public ProductDTO() {}
 
     public ProductDTO(int id, String productName, int mrp, Double discount, Date createdOn, Date updatedOn,
                       String category, String description, Double salePrice, Double purchasePrice, double totalPrice,
-                      Integer quantity, double profitOrLoss, Integer stock,ProductStatus status,User createdBy) {
+                      Integer quantity, double profitOrLoss,
+                      Integer stock,ProductStatus status,User createdBy,String email) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -79,6 +84,8 @@ public class ProductDTO {
         this.stock = stock;
         this.status=status;
         this.createdBy=createdBy;
+        this.email=email;
+
     }
 
 
@@ -137,11 +144,15 @@ public class ProductDTO {
         return createdBy;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedBy(User createdBy) {this.createdBy = createdBy;}
+
+    public String getEmail() {
+        return email;
     }
 
-
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     // --- toString ---
     @Override
@@ -160,6 +171,8 @@ public class ProductDTO {
                 ", quantity=" + quantity +
                 ", profitOrLoss=" + profitOrLoss +
                 ", stock=" + stock +
+                ", email=" +email+
+
                 '}';
     }
 }

@@ -3,6 +3,7 @@ package com.example.e_Cart.project.entity;
 import com.example.e_Cart.project.enums.Role;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,13 +14,12 @@ public class User {
     private int id;
     private String username; //can be email
     private String password;
+    //private String email;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
 
-
-   // private List<String> roles;
 
 
     public User(int id, String username, String password, Role role) {
@@ -27,12 +27,12 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+       // this.email=email;
     }
 
-    public User(){
+    public User() {}
 
-    }
-
+    // --- Getters and Setters ---
     public int getId() {
         return id;
     }
@@ -57,7 +57,6 @@ public class User {
         this.password = password;
     }
 
-
     public Role getRole() {
         return role;
     }
@@ -65,4 +64,12 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 }

@@ -131,4 +131,17 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/api/products/{email}")
+    public ResponseEntity<List<ProductDTO>> getProductsByEmail(@PathVariable String email) {
+        List<ProductDTO> products = productService.findByEmail(email);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/api/{email}/status/{status}")
+    public ResponseEntity<List<ProductDTO>> getStatusProduct(@PathVariable String email,@PathVariable ProductStatus status) {
+        List<ProductDTO> products = productService.findByEmailAndStatus(email,status);
+        return ResponseEntity.ok(products);
+    }
+
+
 }

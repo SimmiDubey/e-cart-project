@@ -54,10 +54,10 @@ public class ProductDTORes {
    @Min(value = 0, message = "Stock cannot be negative")
     private Integer stock;
 
-    @Enumerated(EnumType.STRING)
+
     private ProductStatus status=ProductStatus.PENDING;
 
-    @ManyToOne
+
     private String createdBy;
 
 

@@ -15,5 +15,12 @@ public interface ProductRepo extends JpaRepository<Product,Integer> {
 
     List<Product> findByCreatedBy(User user);
    // List<Product> findByProductStatus(ProductStatus productStatus);
+   // List<Product> findByEmail(String email);
+
+
+    List<Product> findByEmail(String email);
+
+    List<Product> findByEmailAndStatus(String email,ProductStatus status);
+
 
 }
