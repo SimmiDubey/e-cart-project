@@ -23,4 +23,6 @@ public interface ProductRepo extends JpaRepository<Product,Integer> {
     List<Product> findByEmailAndStatus(String email,ProductStatus status);
 
 
+
+
 }

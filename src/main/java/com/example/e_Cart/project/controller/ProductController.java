@@ -4,7 +4,6 @@ import com.example.e_Cart.project.dto.ApiResponse;
 import com.example.e_Cart.project.dto.ProductDTO;
 //import com.example.e_Cart.project.dto.ResultDTO;
 import com.example.e_Cart.project.dto.ResultDTORes;
-import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.exception.ResourceNotFoundException;
@@ -23,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +47,12 @@ public class ProductController {
     @PostMapping("/login")
     public String login(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
         );
 
         if (authentication.isAuthenticated()) {
             UserDetails userDetails;
-            userDetails = myUserDetailsService.loadUserByUsername(user.getUsername());
+            userDetails = myUserDetailsService.loadUserByUsername(user.getEmail());
             return jwtService.generateToken(userDetails);
         } else {
             return "Login Failed";
@@ -74,16 +72,16 @@ public class ProductController {
         String token = authHeader.substring(7);
 
         //  Use correct method from JwtService
-        String username = jwtService.extractUserName(token);
+        String email = jwtService.extractUserName(token);
 
         //  Find user by username
-        User user = userRepo.findByUsername(username);
-        if (user == null) {
-            throw new ResourceNotFoundException("User", "username", username);
+        Optional<User> user = userRepo.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Email", "email", email);
         }
 
         //  Pass user to ProductService
-        ResultDTORes result = productService.createAllProducts(productDtos, user);
+        ResultDTORes result = productService.createAllProducts(productDtos, user.orElse(null));
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

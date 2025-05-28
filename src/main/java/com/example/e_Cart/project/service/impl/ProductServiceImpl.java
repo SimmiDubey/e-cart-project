@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
         public ProductDTO updateProductDto(ProductDTO productDTO, int productId) {
             Product product = productRepo.findById(productId)
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-            product.setId(productDTO.getId());
+           // product.setId(productDTO.getId());
             product.setProductName(productDTO.getProductName());
             product.setMrp(productDTO.getMrp());
             product.setDiscount(productDTO.getDiscount());
@@ -187,7 +187,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> findByEmailAndStatus(String email, ProductStatus status) {
-        List<Product> products = productRepo.findByEmailAndStatus(email,ProductStatus.PENDING);
+        List<Product> products = productRepo.findByEmailAndStatus(email,status);
 
         return products.stream()
                 .map(this::productToDto)

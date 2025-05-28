@@ -1,15 +1,18 @@
 package com.example.e_Cart.project.entity;
 
 import com.example.e_Cart.project.enums.ProductStatus;
+import com.example.e_Cart.project.enums.Role;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String productName;
@@ -33,6 +36,11 @@ public class Product {
     private User createdBy;
     private String email;
 
+
+//    @Enumerated(EnumType.STRING)
+//    @CollectionTable(name = "product_roles", joinColumns = @JoinColumn(name = "product_id"))
+//    @Column(name = "role")
+//    private List<Role> roles = new ArrayList<>();
 
 
 
@@ -64,6 +72,7 @@ public class Product {
         this.status = status;
         this.createdBy = createdBy;
         this.email=email;
+
 
     }
 
@@ -204,4 +213,12 @@ public class Product {
     public void setEmail(String email) {
         this.email = email;
     }
+
+//    public List<Role> getRoles() {
+//        return roles;
+//    }
+//
+//    public void setRoles(List<Role> roles) {
+//        this.roles = roles;
+//    }
 }

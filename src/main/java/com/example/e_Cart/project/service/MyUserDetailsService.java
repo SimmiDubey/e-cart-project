@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -17,16 +19,16 @@ public class MyUserDetailsService implements UserDetailsService {
 
     // Removed 'static' modifier
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // Find the user by username
-        User user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByEmail(email);
 
         // If user not found, throw exception
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with username: " + email);
         }
 
         // Return a custom UserPrincipal with user details
-        return new UserPrincipal(user);
+        return new UserPrincipal(user.orElse(null));
     }
 }
