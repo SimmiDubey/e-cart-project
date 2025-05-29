@@ -14,6 +14,7 @@ import com.example.e_Cart.project.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -69,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
         public List<ProductDTO> getAllProducts() {
-            List<Product> products = productRepo.findAll();
+            List<Product> products = productRepo.findAll(Sort.by(Sort.Direction.ASC,"productName"));
             return products.stream()
                     .map(this::productToDto)
                     .collect(Collectors.toList());
@@ -194,10 +195,16 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductDTO> searchProductByKeyword(String keyword) {
+        List<Product>products = productRepo.findByProductNameContainingIgnoreCase(keyword);
+        return products.stream()
+                .map(this::productToDto)
+                .collect(Collectors.toList());
+    }
 
 
 
-//
 
 
 

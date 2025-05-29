@@ -142,4 +142,19 @@ public class ProductController {
     }
 
 
-}
+    @GetMapping("/search")
+    public ResponseEntity<?> getSearchProduct(
+            @RequestParam String keyword) {
+
+        List<ProductDTO> productDTOS = productService.searchProductByKeyword(keyword);
+
+        if (productDTOS.isEmpty()) {
+            ApiResponse response = new ApiResponse("This product is not available", false);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(productDTOS);
+    }
+
+
+    }

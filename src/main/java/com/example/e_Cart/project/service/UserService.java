@@ -1,5 +1,6 @@
 package com.example.e_Cart.project.service;
 
+import com.example.e_Cart.project.dto.CustomPage;
 import com.example.e_Cart.project.dto.UserDTO;
 import com.example.e_Cart.project.entity.User;
 import org.springframework.data.domain.Page;
@@ -16,9 +17,9 @@ public interface UserService {
     //get the all user
     List<UserDTO>getAllUsers();
 
-    Page<UserDTO> findByWarehouse(int pageNumber, int pageSize );
+    CustomPage<UserDTO> findByWarehouse(int pageNumber, int pageSize);
     List<UserDTO>getAllCustomer();
    // Optional<User> loginUser(String email,  String role);
 
-
+    boolean getExitsUser(String email);
 }

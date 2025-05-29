@@ -1,7 +1,10 @@
 package com.example.e_Cart.project.controller;
 
+import com.example.e_Cart.project.dto.ApiResponse;
+import com.example.e_Cart.project.dto.CustomPage;
 import com.example.e_Cart.project.dto.ProductDTO;
 import com.example.e_Cart.project.dto.UserDTO;
+import com.example.e_Cart.project.exception.DuplicateUserException;
 import com.example.e_Cart.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,11 +23,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/api")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
-        UserDTO createuserDto=this.userService.addUser(userDTO);
-        return new ResponseEntity<>(createuserDto, HttpStatus.OK);
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
+        try {
+            UserDTO savedUser = userService.addUser(userDTO);
+            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        } catch (DuplicateUserException ex) {
+            ApiResponse response = new ApiResponse(ex.getMessage(), false);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
-
 //    @GetMapping("/customers")
 //    public ResponseEntity<List<UserDTO>> getUsers(){
 //        return ResponseEntity.ok(this.userService.getAllCustomer());
@@ -40,16 +47,27 @@ public class UserController {
 
 
     @GetMapping("/warehouse")
-    public ResponseEntity<Page<UserDTO>>getWarehouse(@RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "5")int size){
-        Page<UserDTO>userDTOS=userService.findByWarehouse(page, size);
-        return ResponseEntity.ok(userDTOS);
+    public ResponseEntity<CustomPage<UserDTO>> getWarehouseUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+
+        page = Math.max(page, 0);   // page must be 0 or more
+        size = Math.max(size, 1);   // size must be 1 or more
+
+
+        CustomPage<UserDTO> pageResult = userService.findByWarehouse(page, size);
+
+
+        return ResponseEntity.ok(pageResult);
     }
+
 
     @GetMapping("/customers")
     public ResponseEntity<List<UserDTO>>getCustomer(){
         return ResponseEntity.ok(this.userService.getAllCustomer());
     }
+
 
 
 

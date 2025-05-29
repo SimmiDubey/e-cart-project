@@ -1,8 +1,10 @@
 package com.example.e_Cart.project.service.impl;
 
+import com.example.e_Cart.project.dto.CustomPage;
 import com.example.e_Cart.project.enums.Role;
 import com.example.e_Cart.project.dto.UserDTO;
 import com.example.e_Cart.project.entity.User;
+import com.example.e_Cart.project.exception.DuplicateUserException;
 import com.example.e_Cart.project.repository.ProductRepo;
 import com.example.e_Cart.project.repository.UserRepo;
 import com.example.e_Cart.project.service.UserService;
@@ -30,15 +32,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO addUser(UserDTO userDTO) {
-        User user = this.dtoToUser(userDTO);
+        if (userRepo.existsByEmail(userDTO.getEmail())) {
+            throw new DuplicateUserException("This user already exists with email: " + userDTO.getEmail());
+        }
 
+        User user = this.dtoToUser(userDTO);
         if (user.getRole() == null) {
-            user.setRole(Role.USER); // Default role
+            user.setRole(Role.USER);
         }
 
         User savedUser = userRepo.save(user);
         return this.userToDto(savedUser);
     }
+
 
     @Override
     public List<UserDTO> getAllUsers() {
@@ -50,11 +56,27 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Page<UserDTO> findByWarehouse(int pageNumber, int pageSize) {
+    public CustomPage<UserDTO> findByWarehouse(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<User> userPage = this.userRepo.findByRole(Role.WAREHOUSE, pageable);
-        return userPage.map(this::userToDto);
+        Page<User> userPage = userRepo.findByRole(Role.WAREHOUSE, pageable);
+
+        List<UserDTO> userDTOs = userPage.getContent()
+                .stream()
+                .map(this::userToDto)
+                .collect(Collectors.toList());
+
+        return new CustomPage<UserDTO>(
+                userDTOs,
+                userPage.getNumber(),
+                userPage.getSize(),
+                userPage.getTotalElements(),
+                userPage.getTotalPages()
+        );
     }
+
+
+
+
 
     @Override
     public List<UserDTO> getAllCustomer() {
@@ -63,6 +85,12 @@ public class UserServiceImpl implements UserService {
                 .map(this::userToDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean getExitsUser(String email) {
+        return false;
+    }
+
 
     private User dtoToUser(UserDTO userDTO) {
         return this.modelMapper.map(userDTO, User.class);

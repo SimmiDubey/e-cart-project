@@ -53,5 +53,5 @@ public interface ProductService {
 
         List<ProductDTO> findByEmailAndStatus(String email, ProductStatus status);
 
-
+         List<ProductDTO> searchProductByKeyword(String keyword);
 }
