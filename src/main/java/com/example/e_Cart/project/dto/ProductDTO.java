@@ -58,6 +58,9 @@ public class ProductDTO {
 
     private String email;
 
+    private String imageName;
+    private String imageUrl;
+
 
 
 
@@ -67,7 +70,7 @@ public class ProductDTO {
     public ProductDTO(int id, String productName, int mrp, Double discount, Date createdOn, Date updatedOn,
                       String category, String description, Double salePrice, Double purchasePrice, double totalPrice,
                       Integer quantity, double profitOrLoss,
-                      Integer stock,ProductStatus status,User createdBy,String email) {
+                      Integer stock,ProductStatus status,User createdBy,String email,String imageName,String imageUrl) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -85,6 +88,8 @@ public class ProductDTO {
         this.status=status;
         this.createdBy=createdBy;
         this.email=email;
+        this.imageName=imageName;
+        this.imageUrl=imageUrl;
 
     }
 
@@ -154,6 +159,23 @@ public class ProductDTO {
         this.email = email;
     }
 
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     // --- toString ---
     @Override
     public String toString() {
@@ -172,7 +194,8 @@ public class ProductDTO {
                 ", profitOrLoss=" + profitOrLoss +
                 ", stock=" + stock +
                 ", email=" +email+
-
+                ",imageName=" +imageName+
+                ",imageUrl=" +imageUrl+
                 '}';
     }
 }

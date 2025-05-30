@@ -54,4 +54,7 @@ public interface ProductService {
         List<ProductDTO> findByEmailAndStatus(String email, ProductStatus status);
 
          List<ProductDTO> searchProductByKeyword(String keyword);
+
+         ProductDTO getUpdateImage(int productId,String imageName,String imageUrl);
+         ProductDTO getItemById(int productId);
 }

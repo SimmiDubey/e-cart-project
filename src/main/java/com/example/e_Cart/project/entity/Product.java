@@ -29,6 +29,10 @@ public class Product {
     private double profitOrLoss;
     private Integer stock;
 
+    private String imageName;
+    private String imageUrl;
+
+
     @Enumerated(EnumType.STRING)
     private ProductStatus status = ProductStatus.PENDING;
 
@@ -54,7 +58,8 @@ public class Product {
     public Product(int id, String productName, int mrp, double discount,
                    Date createdOn, Date updatedOn, String description, String category,
                    double salePrice, double purchasePrice, double totalPrice, int quantity,
-                   double profitOrLoss, Integer stock, ProductStatus status, User createdBy,String email) {
+                   double profitOrLoss, Integer stock, ProductStatus status, User createdBy,String email
+         ,String imageName,String imageUrl) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
@@ -72,6 +77,8 @@ public class Product {
         this.status = status;
         this.createdBy = createdBy;
         this.email=email;
+        this.imageName=imageName;
+        this.imageUrl=imageUrl;
 
 
     }
@@ -214,7 +221,23 @@ public class Product {
         this.email = email;
     }
 
-//    public List<Role> getRoles() {
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    //    public List<Role> getRoles() {
 //        return roles;
 //    }
 //

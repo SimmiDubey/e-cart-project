@@ -8,11 +8,13 @@ import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.exception.ResourceNotFoundException;
 import com.example.e_Cart.project.repository.UserRepo;
+import com.example.e_Cart.project.service.FileService;
 import com.example.e_Cart.project.service.JwtService;
 import com.example.e_Cart.project.service.MyUserDetailsService;
 import com.example.e_Cart.project.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +46,14 @@ public class ProductController {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${product.image.upload-path}")
+    private String uploadPath;
+
+
 
     @PostMapping("/login")
     public String login(@RequestBody User user) {
@@ -86,6 +97,23 @@ public class ProductController {
     }
 
 
+
+    @PostMapping("/upload-image/{productId}")
+    public ResponseEntity<ProductDTO>uploadProductImage(@PathVariable int productId, @RequestParam("file")MultipartFile file){
+        String imageName=fileService.saveImage(file,uploadPath);
+        String imageUrl="/images/" +imageName;
+        ProductDTO updateProduct=productService.getUpdateImage(productId,imageName,imageUrl);
+        return ResponseEntity.ok(updateProduct);
+    }
+
+
+
+    //getItemById
+//
+//    @GetMapping("/product-item/{productId}")
+//    public ResponseEntity<ProductDTO>getItem(@PathVariable int productId){
+//        return ResponseEntity.ok(this.productService.getItemById(productId));
+//    }
 
 
 
