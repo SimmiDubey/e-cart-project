@@ -3,10 +3,12 @@ package com.example.e_Cart.project.controller;
 import com.example.e_Cart.project.dto.ApiResponse;
 import com.example.e_Cart.project.dto.ProductDTO;
 //import com.example.e_Cart.project.dto.ResultDTO;
+import com.example.e_Cart.project.dto.ProductDTORes;
 import com.example.e_Cart.project.dto.ResultDTORes;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.exception.ResourceNotFoundException;
+import com.example.e_Cart.project.repository.CategoryRepo;
 import com.example.e_Cart.project.repository.UserRepo;
 import com.example.e_Cart.project.service.FileService;
 import com.example.e_Cart.project.service.JwtService;
@@ -49,6 +51,9 @@ public class ProductController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private CategoryRepo categoryRepo;
 
     @Value("${product.image.upload-path}")
     private String uploadPath;
@@ -99,21 +104,12 @@ public class ProductController {
 
 
     @PostMapping("/upload-image/{productId}")
-    public ResponseEntity<ProductDTO>uploadProductImage(@PathVariable int productId, @RequestParam("file")MultipartFile file){
+    public ResponseEntity<ProductDTORes>uploadProductImage(@PathVariable int productId, @RequestParam("file")MultipartFile file){
         String imageName=fileService.saveImage(file,uploadPath);
         String imageUrl="/images/" +imageName;
-        ProductDTO updateProduct=productService.getUpdateImage(productId,imageName,imageUrl);
+        ProductDTORes updateProduct=productService.getUpdateImage(productId,imageName,imageUrl);
         return ResponseEntity.ok(updateProduct);
     }
-
-
-
-    //getItemById
-//
-//    @GetMapping("/product-item/{productId}")
-//    public ResponseEntity<ProductDTO>getItem(@PathVariable int productId){
-//        return ResponseEntity.ok(this.productService.getItemById(productId));
-//    }
 
 
 

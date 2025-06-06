@@ -2,6 +2,7 @@ package com.example.e_Cart.project.service;
 
 import com.example.e_Cart.project.dto.ProductDTO;
 
+import com.example.e_Cart.project.dto.ProductDTORes;
 import com.example.e_Cart.project.dto.ResultDTORes;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
@@ -55,6 +56,6 @@ public interface ProductService {
 
          List<ProductDTO> searchProductByKeyword(String keyword);
 
-         ProductDTO getUpdateImage(int productId,String imageName,String imageUrl);
-         ProductDTO getItemById(int productId);
+         ProductDTORes getUpdateImage(int productId, String imageName, String imageUrl);
+        // ProductDTO getItemById(int productId);
 }

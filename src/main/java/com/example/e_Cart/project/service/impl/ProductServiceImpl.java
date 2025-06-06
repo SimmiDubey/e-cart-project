@@ -4,10 +4,12 @@ import com.example.e_Cart.project.dto.ProductDTO;
 import com.example.e_Cart.project.dto.ProductDTORes;
 
 import com.example.e_Cart.project.dto.ResultDTORes;
+import com.example.e_Cart.project.entity.Category;
 import com.example.e_Cart.project.entity.Product;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.exception.ResourceNotFoundException;
+import com.example.e_Cart.project.repository.CategoryRepo;
 import com.example.e_Cart.project.repository.ProductRepo;
 import com.example.e_Cart.project.repository.UserRepo;
 import com.example.e_Cart.project.service.ProductService;
@@ -33,6 +35,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private CategoryRepo categoryRepo;
 
 
     @Override
@@ -85,20 +90,24 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO updateProductDto(ProductDTO productDTO, int productId) {
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-        // product.setId(productDTO.getId());
+
         product.setProductName(productDTO.getProductName());
         product.setMrp(productDTO.getMrp());
         product.setDiscount(productDTO.getDiscount());
         product.setCreatedOn(productDTO.getCreatedOn());
         product.setUpdatedOn(productDTO.getUpdatedOn());
-        product.setDescription(productDTO.getDescription());
-        product.setCategory(productDTO.getCategory());
         product.setSalePrice(productDTO.getSalePrice());
         product.setPurchasePrice(productDTO.getPurchasePrice());
         product.setTotalPrice(productDTO.getTotalPrice());
         product.setQuantity(productDTO.getQuantity());
         product.setProfitOrLoss(productDTO.getProfitOrLoss());
         product.setStatus(productDTO.getStatus());
+
+        if(productDTO.getCategoryId() != null){
+            Category category = categoryRepo.findById(productDTO.getCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("categoryId", "categoryId", productDTO.getCategoryId()));
+            product.setCategory(category);
+        }
 
         Product updatedProduct = productRepo.save(product);
         return productToDto(updatedProduct);
@@ -196,7 +205,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO getUpdateImage(int productId, String imageName, String imageUrl) {
+    public ProductDTORes getUpdateImage(int productId, String imageName, String imageUrl) {
 
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -205,17 +214,16 @@ public class ProductServiceImpl implements ProductService {
         product.setImageUrl(imageUrl);
 
         Product saved = productRepo.save(product);
-
-        return modelMapper.map(product, ProductDTO.class);
+        return productToDtoRes(saved);
     }
 
 
-    @Override
-    public ProductDTO getItemById(int productId) {
-     Product product=productRepo.findById(productId)
-             .orElseThrow(()->new RuntimeException("Product not found"));
-       return modelMapper.map(product,ProductDTO.class);
-    }
+//    @Override
+//    public ProductDTO getItemById(int productId) {
+//     Product product=productRepo.findById(productId)
+//             .orElseThrow(()->new RuntimeException("Product not found"));
+//       return modelMapper.map(product,ProductDTO.class);
+//    }
 
 
     // Mapping Helpers
@@ -237,3 +245,6 @@ public class ProductServiceImpl implements ProductService {
     }
     }
 
+
+
+    

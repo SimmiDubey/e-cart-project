@@ -2,6 +2,7 @@ package com.example.e_Cart.project.entity;
 
 import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.enums.Role;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,8 +21,7 @@ public class Product {
     private double discount;
     private Date createdOn;
     private Date updatedOn;
-    private String description;
-    private String category;
+
     private double salePrice;
     private double purchasePrice;
     private double totalPrice;
@@ -40,6 +40,10 @@ public class Product {
     private User createdBy;
     private String email;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoryId",nullable = false)
+    private Category category;
+
 
 //    @Enumerated(EnumType.STRING)
 //    @CollectionTable(name = "product_roles", joinColumns = @JoinColumn(name = "product_id"))
@@ -56,18 +60,17 @@ public class Product {
 
     // Parameterized constructor
     public Product(int id, String productName, int mrp, double discount,
-                   Date createdOn, Date updatedOn, String description, String category,
+                   Date createdOn, Date updatedOn, String description,
                    double salePrice, double purchasePrice, double totalPrice, int quantity,
                    double profitOrLoss, Integer stock, ProductStatus status, User createdBy,String email
-         ,String imageName,String imageUrl) {
+         ,String imageName,String imageUrl,Category category) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
         this.discount = discount;
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
-        this.description = description;
-        this.category = category;
+        this.category=category;
         this.salePrice = salePrice;
         this.purchasePrice = purchasePrice;
         this.totalPrice = totalPrice;
@@ -133,21 +136,6 @@ public class Product {
         this.updatedOn = updatedOn;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     public double getSalePrice() {
         return salePrice;
@@ -236,6 +224,15 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
 
     //    public List<Role> getRoles() {
 //        return roles;

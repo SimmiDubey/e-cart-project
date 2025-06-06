@@ -1,11 +1,8 @@
 package com.example.e_Cart.project.dto;
 
-import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.*;
+
 import java.util.Date;
 
 public class ProductDTO {
@@ -18,16 +15,10 @@ public class ProductDTO {
     @Min(value = 1, message = "MRP must be at least 1")
     private int mrp;
 
-
     private Double discount;
 
     private Date createdOn;
     private Date updatedOn;
-
-    @NotBlank(message = "Category is required")
-    private String category;
-
-    private String description;
 
     @NotNull(message = "Sale price must not be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Sale price must be greater than 0")
@@ -47,54 +38,48 @@ public class ProductDTO {
     private double profitOrLoss;
 
     @NotNull(message = "Stock is required")
-   @Min(value = 0, message = "Stock cannot be negative")
+    @Min(value = 0, message = "Stock cannot be negative")
     private Integer stock;
 
-    @Enumerated(EnumType.STRING)
-    private ProductStatus status=ProductStatus.PENDING;
-
-    @ManyToOne
-    private User createdBy;
+    private ProductStatus status = ProductStatus.PENDING;
 
     private String email;
 
     private String imageName;
     private String imageUrl;
 
+    private Integer categoryId;
 
 
-
-
+    // --- Constructors ---
     public ProductDTO() {}
 
     public ProductDTO(int id, String productName, int mrp, Double discount, Date createdOn, Date updatedOn,
-                      String category, String description, Double salePrice, Double purchasePrice, double totalPrice,
-                      Integer quantity, double profitOrLoss,
-                      Integer stock,ProductStatus status,User createdBy,String email,String imageName,String imageUrl) {
+                      Double salePrice, Double purchasePrice, double totalPrice,
+                      Integer quantity, double profitOrLoss, Integer stock,
+                      ProductStatus status, String email, String imageName, String imageUrl
+                       ,Integer categoryId) {
+
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
         this.discount = discount;
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
-        this.category = category;
-        this.description = description;
         this.salePrice = salePrice;
         this.purchasePrice = purchasePrice;
         this.totalPrice = totalPrice;
         this.quantity = quantity;
         this.profitOrLoss = profitOrLoss;
         this.stock = stock;
-        this.status=status;
-        this.createdBy=createdBy;
-        this.email=email;
-        this.imageName=imageName;
-        this.imageUrl=imageUrl;
-
+        this.status = status;
+        this.email = email;
+        this.imageName = imageName;
+        this.imageUrl = imageUrl;
+        this.categoryId=categoryId;
     }
 
-
-
+    // --- Getters and Setters ---
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -112,12 +97,6 @@ public class ProductDTO {
 
     public Date getUpdatedOn() { return updatedOn; }
     public void setUpdatedOn(Date updatedOn) { this.updatedOn = updatedOn; }
-
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
 
     public Double getSalePrice() { return salePrice; }
     public void setSalePrice(Double salePrice) { this.salePrice = salePrice; }
@@ -137,43 +116,25 @@ public class ProductDTO {
     public Integer getStock() { return stock; }
     public void setStock(Integer stock) { this.stock = stock; }
 
-    public ProductStatus getStatus() {
-        return status;
+    public ProductStatus getStatus() { return status; }
+    public void setStatus(ProductStatus status) { this.status = status; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getImageName() { return imageName; }
+    public void setImageName(String imageName) { this.imageName = imageName; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setStatus(ProductStatus status) {
-        this.status = status;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {this.createdBy = createdBy;}
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     // --- toString ---
@@ -185,17 +146,17 @@ public class ProductDTO {
                 ", discount=" + discount +
                 ", createdOn=" + createdOn +
                 ", updatedOn=" + updatedOn +
-                ", category='" + category + '\'' +
-                ", description='" + description + '\'' +
                 ", salePrice=" + salePrice +
                 ", purchasePrice=" + purchasePrice +
                 ", totalPrice=" + totalPrice +
                 ", quantity=" + quantity +
                 ", profitOrLoss=" + profitOrLoss +
                 ", stock=" + stock +
-                ", email=" +email+
-                ",imageName=" +imageName+
-                ",imageUrl=" +imageUrl+
+                ", status=" + status +
+                ", email='" + email + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ",categoryId=" +categoryId +
                 '}';
     }
 }

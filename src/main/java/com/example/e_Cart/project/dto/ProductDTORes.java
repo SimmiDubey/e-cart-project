@@ -28,10 +28,8 @@ public class ProductDTORes {
     private Date createdOn;
     private Date updatedOn;
 
-    @NotBlank(message = "Category is required")
-    private String category;
 
-    private String description;
+
 
     @NotNull(message = "Sale price must not be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Sale price must be greater than 0")
@@ -59,22 +57,26 @@ public class ProductDTORes {
 
 
     private String createdBy;
+    private String imageName;
+    private String imageUrl;
 
+    private Integer categoryId;
 
 
     public ProductDTORes() {}
 
     public ProductDTORes(int id, String productName, int mrp, Double discount, Date createdOn, Date updatedOn,
                          String category, String description, Double salePrice, Double purchasePrice, double totalPrice,
-                         Integer quantity, double profitOrLoss, Integer stock, ProductStatus status, String createdBy) {
+                         Integer quantity, double profitOrLoss, Integer stock, ProductStatus status, String createdBy,
+                         String imageName,String imageUrl,Integer categoryId) {
         this.id = id;
         this.productName = productName;
         this.mrp = mrp;
         this.discount = discount;
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
-        this.category = category;
-        this.description = description;
+
+
         this.salePrice = salePrice;
         this.purchasePrice = purchasePrice;
         this.totalPrice = totalPrice;
@@ -83,6 +85,7 @@ public class ProductDTORes {
         this.stock = stock;
         this.status=status;
         this.createdBy=createdBy;
+        this.categoryId=categoryId;
     }
 
 
@@ -105,11 +108,8 @@ public class ProductDTORes {
     public Date getUpdatedOn() { return updatedOn; }
     public void setUpdatedOn(Date updatedOn) { this.updatedOn = updatedOn; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+
 
     public Double getSalePrice() { return salePrice; }
     public void setSalePrice(Double salePrice) { this.salePrice = salePrice; }
@@ -145,7 +145,30 @@ public class ProductDTORes {
         this.createdBy = createdBy;
     }
 
+    public String getImageName() {
+        return imageName;
+    }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
 
     // --- toString ---
     @Override
@@ -156,14 +179,16 @@ public class ProductDTORes {
                 ", discount=" + discount +
                 ", createdOn=" + createdOn +
                 ", updatedOn=" + updatedOn +
-                ", category='" + category + '\'' +
-                ", description='" + description + '\'' +
+
                 ", salePrice=" + salePrice +
                 ", purchasePrice=" + purchasePrice +
                 ", totalPrice=" + totalPrice +
                 ", quantity=" + quantity +
                 ", profitOrLoss=" + profitOrLoss +
                 ", stock=" + stock +
+                ",imageName=" +imageName+
+                ",imageUrl="  +imageUrl+
+                ",categoryId=" +categoryId+
                 '}';
     }
 }
