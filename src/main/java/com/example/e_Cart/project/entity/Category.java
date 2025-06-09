@@ -16,15 +16,18 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Product>products=new ArrayList<>();
 
+    @OneToOne(mappedBy = "category",cascade = CascadeType.ALL)
+    private Stock stock;
 
     public Category() {
     }
 
-    public Category(int id, String title, String description, List<Product> products) {
+    public Category(int id, String title, String description, List<Product> products,Stock stock) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.products = products;
+        this.stock=stock;
     }
 
     public int getId() {
@@ -57,5 +60,13 @@ public class Category {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 }

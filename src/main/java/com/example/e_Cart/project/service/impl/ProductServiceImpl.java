@@ -4,15 +4,19 @@ import com.example.e_Cart.project.dto.ProductDTO;
 import com.example.e_Cart.project.dto.ProductDTORes;
 
 import com.example.e_Cart.project.dto.ResultDTORes;
+import com.example.e_Cart.project.dto.StockDTO;
 import com.example.e_Cart.project.entity.Category;
 import com.example.e_Cart.project.entity.Product;
+import com.example.e_Cart.project.entity.Stock;
 import com.example.e_Cart.project.entity.User;
 import com.example.e_Cart.project.enums.ProductStatus;
 import com.example.e_Cart.project.exception.ResourceNotFoundException;
 import com.example.e_Cart.project.repository.CategoryRepo;
 import com.example.e_Cart.project.repository.ProductRepo;
+import com.example.e_Cart.project.repository.StockRepo;
 import com.example.e_Cart.project.repository.UserRepo;
 import com.example.e_Cart.project.service.ProductService;
+import com.example.e_Cart.project.service.StockService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,6 +42,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private CategoryRepo categoryRepo;
+
+    @Autowired
+    private StockRepo stockRepo;
+
+    @Autowired
+    private StockService stockService;
 
 
     @Override
@@ -138,16 +148,16 @@ public class ProductServiceImpl implements ProductService {
         productDTO.setTotalPrice(totalAfterDiscount);
         productDTO.setProfitOrLoss(profitOrLoss);
 
-        if (productDTO.getStock() == null) {
-            productDTO.setStock(productDTO.getQuantity());
-        } else {
-            int updatedStock = productDTO.getStock() - productDTO.getQuantity();
-            if (updatedStock < 0) {
-                throw new IllegalArgumentException("Not enough stock available for products :" + productDTO.getProductName());
-
-            }
-            productDTO.setStock(updatedStock);
-        }
+//        if (productDTO.getStock() == null) {
+//            productDTO.setStock(productDTO.getQuantity());
+//        } else {
+//            int updatedStock = productDTO.getStock() - productDTO.getQuantity();
+//            if (updatedStock < 0) {
+//                throw new IllegalArgumentException("Not enough stock available for products :" + productDTO.getProductName());
+//
+//            }
+//            productDTO.setStock(updatedStock);
+//        }
 
         return productDTO;
     }
@@ -157,10 +167,36 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO updateProductStatus(int productId, ProductStatus status) {
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
         product.setStatus(status); // Update the status
-        Product updatedProduct = productRepo.save(product); // Save the updated product
-        return productToDto(updatedProduct); // Return the updated product DTO
+
+//        // If status is APPROVED, update or create stock
+//        if (status == ProductStatus.APPROVED) {
+//            Category category = product.getCategory();
+//            int quantity = product.getQuantity();
+//
+//            Stock stock = stockRepo.findByCategory(category).orElse(null);
+//            if (stock == null) {
+//                // New stock entry
+//                stock = new Stock(quantity, category);
+//            } else {
+//                // Update existing stock
+//                stock.setQuantity(stock.getQuantity() + quantity);
+//            }
+//            stockRepo.save(stock);
+//        }
+
+          if(status==ProductStatus.APPROVED){
+              int categoryId=product.getCategory().getId();
+              int quantity=product.getQuantity();
+              stockService.updateStockAfterApproval(categoryId,quantity);
+
+          }
+
+        Product updatedProduct = productRepo.save(product);
+        return productToDto(updatedProduct);
     }
+
 
     @Override
     public List<ProductDTO> getProductByUser(User user) {
@@ -226,16 +262,28 @@ public class ProductServiceImpl implements ProductService {
 //    }
 
 
-    // Mapping Helpers
-        public Product dtoToProduct(ProductDTO productDTO) {
-            return modelMapper.map(productDTO, Product.class);
-        }
+    // Mapping: ProductDTO → Product
+    public Product dtoToProduct(ProductDTO productDTO) {
+        return modelMapper.map(productDTO, Product.class);
+    }
 
-        public ProductDTO productToDto(Product product) {
-            ProductDTO dto=modelMapper.map(product,ProductDTO.class);
-            dto.setId(product.getId());
-            return dto;
-        }
+    // Mapping: Product → ProductDTO (with Stock info)
+    public ProductDTO productToDto(Product product) {
+        ProductDTO dto = modelMapper.map(product, ProductDTO.class);
+        dto.setId(product.getId());
+
+        // Load stock if exists by category
+        stockRepo.findByCategoryId(product.getCategory().getId()).ifPresent(stock -> {
+            StockDTO stockDTO = modelMapper.map(stock, StockDTO.class);
+            dto.setStock(stockDTO);
+        });
+
+        return dto;
+    }
+
+
+
+
 
     public ProductDTORes productToDtoRes(Product product) {
         ProductDTORes dto=modelMapper.map(product,ProductDTORes.class);
@@ -243,7 +291,9 @@ public class ProductServiceImpl implements ProductService {
         dto.setCreatedBy(product.getCreatedBy().getRole().name());
         return dto;
     }
-    }
+
+
+}
 
 
 

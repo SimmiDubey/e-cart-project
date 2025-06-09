@@ -13,6 +13,8 @@ public interface CategoryService {
 
     List<CategoryDTO>getAllCategory();
 
+    List<CategoryDTO>getAllCategoryWithStock();
+
 
 
 }

@@ -58,4 +58,6 @@ public interface ProductService {
 
          ProductDTORes getUpdateImage(int productId, String imageName, String imageUrl);
         // ProductDTO getItemById(int productId);
+
+       // List<ProductDTO>updateStock(int productId,ProductStatus status1);
 }

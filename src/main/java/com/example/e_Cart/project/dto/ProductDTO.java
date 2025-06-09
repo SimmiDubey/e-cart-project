@@ -37,9 +37,9 @@ public class ProductDTO {
 
     private double profitOrLoss;
 
-    @NotNull(message = "Stock is required")
-    @Min(value = 0, message = "Stock cannot be negative")
-    private Integer stock;
+//    @NotNull(message = "Stock is required")
+//    @Min(value = 0, message = "Stock cannot be negative")
+//    private Integer stock;
 
     private ProductStatus status = ProductStatus.PENDING;
 
@@ -50,15 +50,17 @@ public class ProductDTO {
 
     private Integer categoryId;
 
+    private StockDTO stock;
+
 
     // --- Constructors ---
     public ProductDTO() {}
 
     public ProductDTO(int id, String productName, int mrp, Double discount, Date createdOn, Date updatedOn,
                       Double salePrice, Double purchasePrice, double totalPrice,
-                      Integer quantity, double profitOrLoss, Integer stock,
+                      Integer quantity, double profitOrLoss,
                       ProductStatus status, String email, String imageName, String imageUrl
-                       ,Integer categoryId) {
+                       ,Integer categoryId,StockDTO stock) {
 
         this.id = id;
         this.productName = productName;
@@ -71,12 +73,13 @@ public class ProductDTO {
         this.totalPrice = totalPrice;
         this.quantity = quantity;
         this.profitOrLoss = profitOrLoss;
-        this.stock = stock;
+
         this.status = status;
         this.email = email;
         this.imageName = imageName;
         this.imageUrl = imageUrl;
         this.categoryId=categoryId;
+        this.stock=stock;
     }
 
     // --- Getters and Setters ---
@@ -113,8 +116,6 @@ public class ProductDTO {
     public double getProfitOrLoss() { return profitOrLoss; }
     public void setProfitOrLoss(double profitOrLoss) { this.profitOrLoss = profitOrLoss; }
 
-    public Integer getStock() { return stock; }
-    public void setStock(Integer stock) { this.stock = stock; }
 
     public ProductStatus getStatus() { return status; }
     public void setStatus(ProductStatus status) { this.status = status; }
@@ -131,6 +132,14 @@ public class ProductDTO {
 
     public Integer getCategoryId() {
         return categoryId;
+    }
+
+    public StockDTO getStock() {
+        return stock;
+    }
+
+    public void setStock(StockDTO stock) {
+        this.stock = stock;
     }
 
     public void setCategoryId(Integer categoryId) {
@@ -151,12 +160,13 @@ public class ProductDTO {
                 ", totalPrice=" + totalPrice +
                 ", quantity=" + quantity +
                 ", profitOrLoss=" + profitOrLoss +
-                ", stock=" + stock +
+
                 ", status=" + status +
                 ", email='" + email + '\'' +
                 ", imageName='" + imageName + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ",categoryId=" +categoryId +
+                ",stock=" +stock +
                 '}';
     }
 }

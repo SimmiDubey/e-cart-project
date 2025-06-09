@@ -181,4 +181,13 @@ public class ProductController {
     }
 
 
+    @PutMapping("/products/{productId}/status")
+    public ResponseEntity<ProductDTO> updateProductStatus(
+            @PathVariable int productId,
+            @RequestParam ProductStatus status) {
+        ProductDTO updatedProduct = productService.updateProductStatus(productId, status);
+        return ResponseEntity.ok(updatedProduct);
     }
+
+
+}

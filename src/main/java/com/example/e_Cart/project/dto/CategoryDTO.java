@@ -1,9 +1,22 @@
 package com.example.e_Cart.project.dto;
 
+import com.example.e_Cart.project.entity.Product;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class CategoryDTO {
     private int id;
     private String title;
     private String description;
+
+
+
+
+
+
 
     public CategoryDTO() {
     }
@@ -12,6 +25,7 @@ public class CategoryDTO {
         this.title = title;
         this.description = description;
         this.id=id;
+
 
     }
 
@@ -40,4 +54,9 @@ public class CategoryDTO {
     public void setId(int id) {
         this.id = id;
     }
-}
+
+
+
+
+    }
+

@@ -27,7 +27,7 @@ public class Product {
     private double totalPrice;
     private int quantity;
     private double profitOrLoss;
-    private Integer stock;
+    //private Integer stock;
 
     private String imageName;
     private String imageUrl;
@@ -62,7 +62,7 @@ public class Product {
     public Product(int id, String productName, int mrp, double discount,
                    Date createdOn, Date updatedOn, String description,
                    double salePrice, double purchasePrice, double totalPrice, int quantity,
-                   double profitOrLoss, Integer stock, ProductStatus status, User createdBy,String email
+                   double profitOrLoss,ProductStatus status, User createdBy,String email
          ,String imageName,String imageUrl,Category category) {
         this.id = id;
         this.productName = productName;
@@ -76,7 +76,7 @@ public class Product {
         this.totalPrice = totalPrice;
         this.quantity = quantity;
         this.profitOrLoss = profitOrLoss;
-        this.stock = stock;
+
         this.status = status;
         this.createdBy = createdBy;
         this.email=email;
@@ -177,13 +177,7 @@ public class Product {
         this.profitOrLoss = profitOrLoss;
     }
 
-    public Integer getStock() {
-        return stock;
-    }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
 
     public ProductStatus getStatus() {
         return status;

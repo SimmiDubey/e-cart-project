@@ -37,7 +37,13 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<CategoryDTO> getAllCategoryWithStock() {
+        return List.of();
+    }
+
     public Category dtoToCategory(CategoryDTO categoryDTO) {
+
         return modelMapper.map(categoryDTO, Category.class);
     }
 
