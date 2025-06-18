@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+
+
+
+
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -205,13 +209,13 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<ProductDTO> getProductsByStatus(ProductStatus status) {
-        return productRepo.findByStatus(status)
-                .stream()
-                .map(this::productToDto)
-                .collect(Collectors.toList());
-    }
+        @Override
+        public List<ProductDTO> getProductsByStatus(ProductStatus status) {
+            return productRepo.findByStatus(status)
+                    .stream()
+                    .map(this::productToDto)
+                    .collect(Collectors.toList());
+        }
 
     @Override
     public List<ProductDTO> findByEmail(String email) {
@@ -283,15 +287,12 @@ public class ProductServiceImpl implements ProductService {
 
 
 
-
-
     public ProductDTORes productToDtoRes(Product product) {
         ProductDTORes dto=modelMapper.map(product,ProductDTORes.class);
         dto.setId(product.getId());
         dto.setCreatedBy(product.getCreatedBy().getRole().name());
         return dto;
     }
-
 
 }
 

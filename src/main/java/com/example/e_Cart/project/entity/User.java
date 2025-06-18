@@ -3,6 +3,8 @@ package com.example.e_Cart.project.entity;
 import com.example.e_Cart.project.enums.Role;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class User {
 
@@ -16,15 +18,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Orders> orders;
 
 
-
-    public User(int id, String email, String password, Role role) {
+    public User(int id, String email, String password, Role role,List<Orders> orders) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
         // this.email=email;
+        this.orders=orders;
     }
 
     public User() {}
@@ -62,5 +66,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Orders> orders) {
+        this.orders = orders;
     }
 }
