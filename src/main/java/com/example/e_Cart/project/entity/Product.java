@@ -44,6 +44,10 @@ public class Product {
     @JoinColumn(name = "categoryId",nullable = false)
     private Category category;
 
+    @ManyToMany(mappedBy = "products")
+    private List<Orders> orders;
+
+
 
 //    @Enumerated(EnumType.STRING)
 //    @CollectionTable(name = "product_roles", joinColumns = @JoinColumn(name = "product_id"))

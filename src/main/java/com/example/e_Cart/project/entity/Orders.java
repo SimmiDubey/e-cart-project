@@ -3,6 +3,8 @@ package com.example.e_Cart.project.entity;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
+
 
 @Entity
 public class Orders {
@@ -20,14 +22,18 @@ public class Orders {
     @ManyToOne
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @ManyToMany
+    @JoinTable(
+            name = "order_products",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> products;
 
     public Orders(){
 
     }
-    public Orders(int id, int quantity, int totalAmount, String status,Product product, User user, Date orderDate){
+    public Orders(int id, int quantity, int totalAmount, String status,List<Product> products, User user, Date orderDate){
         this.id=id;
 
 
@@ -36,7 +42,7 @@ public class Orders {
         this.status=status;
         this.user=user;
         this.orderDate=orderDate;
-        this.product=product;
+        this.products=products;
     }
 
 
@@ -89,11 +95,11 @@ public class Orders {
 
     }
 
-    public Product getProduct() {
-        return product;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProducts(List<Product> product) {
+        this.products = product;
     }
 }
