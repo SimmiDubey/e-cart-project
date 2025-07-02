@@ -15,16 +15,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/save")
-    public ResponseEntity<List<OrderDTO>>saveAll(@RequestBody List<OrderDTO> orderDTO){
-        List<OrderDTO>orderDTOS=this.orderService.createAll(orderDTO);
-        return ResponseEntity.ok(orderDTOS);
-    }
 
-    @GetMapping()
 
-    public ResponseEntity<List<OrderDTO>>getAll(){
-        List<OrderDTO>orderDTOS=this.orderService.getAllOrder();
-        return ResponseEntity.ok(orderDTOS);
-    }
+
 }

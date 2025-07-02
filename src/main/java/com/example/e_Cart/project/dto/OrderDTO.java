@@ -1,76 +1,76 @@
 package com.example.e_Cart.project.dto;
 
+import com.example.e_Cart.project.enums.OrderStatus;
+
+import java.util.Date;
 import java.util.List;
 
 public class OrderDTO {
 
-    private int quantity;
-    private int totalAmount;
-    private String status;
-    private int userId;
-    private List<Integer> productIds;
+     private int order_id;
+     private OrderStatus status;
+     private Date order_date;
+     private int productId;
+     private String email;
 
-    public OrderDTO() {
-    }
+     public OrderDTO(){
 
-    public OrderDTO(int quantity, int totalAmount, String status, int userId, List<Integer> productIds) {
-        this.quantity = quantity;
-        this.totalAmount = totalAmount;
+     }
+
+    public OrderDTO(int order_id, OrderStatus status, Date order_date,int productId,String email) {
+        this.order_id = order_id;
         this.status = status;
-        this.userId = userId;
-        this.productIds = productIds;
+        this.order_date = order_date;
+        this.productId=productId;
+        this.email=email;
     }
 
-    // Getters and Setters
-
-    public int getQuantity() {
-        return quantity;
+    public int getOrder_id() {
+        return order_id;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setOrder_id(int order_id) {
+        this.order_id = order_id;
     }
 
-    public int getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
-    public int getUserId() {
-        return userId;
+    public Date getOrder_date() {
+        return order_date;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setOrder_date(Date order_date) {
+        this.order_date = order_date;
     }
 
-    public List<Integer> getProductIds() {
-        return productIds;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProductIds(List<Integer> productIds) {
-        this.productIds = productIds;
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
     public String toString() {
         return "OrderDTO{" +
-                "quantity=" + quantity +
-                ", totalAmount=" + totalAmount +
+                "order_id=" + order_id +
                 ", status='" + status + '\'' +
-                ", userId=" + userId +
-                ", productIds=" + productIds +
+                ", order_date=" + order_date +
                 '}';
     }
 }

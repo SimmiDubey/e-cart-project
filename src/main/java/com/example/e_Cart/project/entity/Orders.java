@@ -3,7 +3,6 @@ package com.example.e_Cart.project.entity;
 import jakarta.persistence.*;
 
 import java.util.Date;
-import java.util.List;
 
 
 @Entity
@@ -22,29 +21,23 @@ public class Orders {
     @ManyToOne
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-            name = "order_products",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products;
+    @ManyToOne
+    private Product products;
 
-    public Orders(){
+    public Orders() {
 
     }
-    public Orders(int id, int quantity, int totalAmount, String status,List<Product> products, User user, Date orderDate){
-        this.id=id;
 
-
-        this.quantity=quantity;
-        this.totalAmount=totalAmount;
-        this.status=status;
-        this.user=user;
-        this.orderDate=orderDate;
-        this.products=products;
+    public Orders(int id, int quantity, int totalAmount,
+                  String status, Date orderDate, User user, Product products) {
+        this.id = id;
+        this.quantity = quantity;
+        this.totalAmount = totalAmount;
+        this.status = status;
+        this.orderDate = orderDate;
+        this.user = user;
+        this.products = products;
     }
-
 
     public int getId() {
         return id;
@@ -70,12 +63,20 @@ public class Orders {
         this.totalAmount = totalAmount;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatus(String status) {
+        return this.status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
     }
 
     public User getUser() {
@@ -86,20 +87,11 @@ public class Orders {
         this.user = user;
     }
 
-    public Date getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
-
-    }
-
-    public List<Product> getProducts() {
+    public Product getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> product) {
-        this.products = product;
+    public void setProducts(Product products) {
+        this.products = products;
     }
 }
